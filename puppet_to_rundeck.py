@@ -4,8 +4,11 @@
 
 import yaml
 import argparse
-import os, sys
+import os, sys, time
 from itertools import islice
+from datetime import datetime, timedelta
+import glob
+
 
 
 def cut_line_1(fin,tmp_file):
@@ -14,10 +17,10 @@ def cut_line_1(fin,tmp_file):
     with open(tmp_file, 'w') as fout:
         fout.writelines(data[1:])
 
-def puppet_to_rundeck(yaml_node_dir,outputdir,node):
+def puppet_to_rundeck(path,outputdir,node):
     tmp_file = outputdir + '/tmp/tmpfile.yaml'
-    path = yaml_node_dir + node
-    print("file: %s" % path)
+
+    print("working on file: %s" % path)
 
     if not os.path.isfile(path):
         print('file does not exist: %s' % path)
@@ -28,7 +31,7 @@ def puppet_to_rundeck(yaml_node_dir,outputdir,node):
         yaml_data = yaml.load(f)
 
         tags = yaml_data['parameters']['datacenter'] + ',' + yaml_data['parameters']['node_environment'] + ',' + yaml_data['parameters']['node_type']
-        d = {yaml_data['parameters']['hostname']:{'hostname':yaml_data['name'], 'osFamily':yaml_data['parameters']['osfamily'], 'osVersion':yaml_data['parameters']['os']['release']['full'], 'osName':yaml_data['parameters']['os']['lsb']['distdescription'], 'tags':tags}}
+        d = {yaml_data['parameters']['hostname']:{'hostname':yaml_data['name'], 'osFamily':yaml_data['parameters']['osfamily'], 'osVersion':yaml_data['parameters']['os']['release']['full'], 'osName':yaml_data['parameters']['os']['lsb']['distdescription'], 'osArch':yaml_data['parameters']['architecture'], 'tags':tags}}
         f.close()
 
         with open(outputdir + '/node/' + node + '.yaml', 'w') as result_file:
@@ -42,9 +45,16 @@ def main():
 
     args = parser.parse_args()
     yaml_node_dir = args.yamldir + '/node/'
+    print ("yaml_node_dir: %s" % yaml_node_dir)
 
-    for node in os.listdir(yaml_node_dir):
-        puppet_to_rundeck(yaml_node_dir,args.outputdir,node)
+    listing = glob.glob(yaml_node_dir + '*.yaml')
+    for path_to_node in listing:
+        node = os.path.basename(path_to_node) 
+        if (datetime.now() - datetime.fromtimestamp(os.path.getmtime(path_to_node))) > timedelta(days = 1):
+            print("file %s is too old" % path_to_node)
+            continue
+        else:
+            puppet_to_rundeck(path_to_node,args.outputdir,node)
 
 if __name__ == "__main__":
     main()
