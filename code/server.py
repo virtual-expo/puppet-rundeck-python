@@ -19,14 +19,28 @@ import sys
 import io
 from http import HTTPStatus
 import shutil
+from code.node_loop import *
+import yaml
 
-
-class S(BaseHTTPRequestHandler):
+class ServerCustom(BaseHTTPRequestHandler):
     def do_GET(self):
+        config_file = '/etc/puppet-to-rundeck.yaml'
+        if os.path.isfile(config_file):
+            with open(config_file, 'r') as fconf:
+                yaml_conf = yaml.load(fconf)
+                yamlnodedir = yaml_conf['yamlnodedir']
+                outputdir = yaml_conf['outputdir']
+        else:
+            yamlnodedir = '/var/lib/puppet/yaml/node'
+            outputdir = '/var/lib/puppet-to-rundeck/outdir'
+
+        os.chdir(outputdir + '/node')
+
         """Serve a GET request."""
         f = self.send_head()
         if f:
             try:
+                node_loop(yamlnodedir,outputdir)
                 self.copyfile(f, self.wfile)
             finally:
                 f.close()
@@ -187,11 +201,12 @@ class S(BaseHTTPRequestHandler):
     
        
 #def runServer(server_class=HTTPServer, handler_class=S, port=8080):
-def runServer(address,port,yamlnodedir,outputdir):
-    server_address = ('127.0.0.1', port)
-    #httpd = server_class(server_address, handler_class)
-    httpd = HTTPServer(server_address, S)
-    os.chdir(outputdir + '/node')
+#    httpd = server_class(server_address, handler_class)
+def runServer(address,port):
+    server_address = (address, port)
+
+    httpd = HTTPServer(server_address, ServerCustom)
+    #httpd = HTTPServerCustom(server_address,ServerCustom,yamlnodedir,outputdir)
 
     print('Starting httpd...')
     httpd.serve_forever()
