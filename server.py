@@ -21,15 +21,8 @@ from http import HTTPStatus
 import shutil
 
 
-
 class S(BaseHTTPRequestHandler):
-    def _set_headers(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-
     def do_GET(self):
-        self._set_headers()
         """Serve a GET request."""
         f = self.send_head()
         if f:
@@ -37,12 +30,19 @@ class S(BaseHTTPRequestHandler):
                 self.copyfile(f, self.wfile)
             finally:
                 f.close()
-
-        #self.wfile.write(bytes("<html><body><h1>hi!</h1></body></html>", "utf-8"))
-
+    
     def do_HEAD(self):
-        self._set_headers()
- 
+        """Serve a HEAD request."""
+        f = self.send_head()
+        if f:
+            f.close()
+
+    def do_POST(self):
+        """Serve a POST request."""
+        self.send_error(
+            HTTPStatus.NOT_IMPLEMENTED,
+            "Cannot POST")
+
     def send_head(self):
         """Common code for GET and HEAD commands.
     
@@ -74,7 +74,7 @@ class S(BaseHTTPRequestHandler):
                     break
             else:
                 return self.list_directory(path)
-        ctype = self.guess_type(path)
+        ctype = 'text/yaml'
         try:
             f = open(path, 'rb')
         except OSError:
@@ -183,28 +183,9 @@ class S(BaseHTTPRequestHandler):
 
 
     def copyfile(self, source, outputfile):
-        """Copy all data between two file objects.
-    
-        The SOURCE argument is a file object open for reading
-        (or anything with a read() method) and the DESTINATION
-        argument is a file object open for writing (or
-        anything with a write() method).
-    
-        The only reason for overriding this would be to change
-        the block size or perhaps to replace newlines by CRLF
-        -- note however that this the default server uses this
-        to copy binary data as well.
-    
-        """
         shutil.copyfileobj(source, outputfile)
     
-
-  
-    def do_POST(self):
-        # Doesn't do anything with posted data
-        self._set_headers()
-        self.wfile.write(bytes("<html><body><h1>NO WAY YOU POST HERE!</h1></body></html>", "utf-8"))
-        
+       
 def run(server_class=HTTPServer, handler_class=S, port=8080):
     server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, handler_class)
