@@ -186,18 +186,12 @@ class S(BaseHTTPRequestHandler):
         shutil.copyfileobj(source, outputfile)
     
        
-def run(server_class=HTTPServer, handler_class=S, port=8080):
+#def runServer(server_class=HTTPServer, handler_class=S, port=8080):
+def runServer(address,port,yamlnodedir,outputdir):
     server_address = ('127.0.0.1', port)
-    httpd = server_class(server_address, handler_class)
+    #httpd = server_class(server_address, handler_class)
+    httpd = HTTPServer(server_address, S)
+    os.chdir(outputdir + '/node')
+
     print('Starting httpd...')
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path + '/outdir/node')
     httpd.serve_forever()
-
-if __name__ == "__main__":
-    from sys import argv
-
-    if len(argv) == 2:
-        run(port=int(argv[1]))
-    else:
-        run()
