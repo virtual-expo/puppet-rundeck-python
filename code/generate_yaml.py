@@ -8,6 +8,7 @@ import os, sys, time
 from itertools import islice
 from datetime import datetime, timedelta
 import glob
+from code.helper import *
 
 
 
@@ -20,7 +21,7 @@ def cut_line_1(fin,tmp_file):
 def generate_yaml(path,outputdir,node):
     tmp_file = outputdir + '/tmp/tmpfile.yaml'
 
-    print("working on file: %s" % path)
+    logv("working on file: %s" % path)
 
     if not os.path.isfile(path):
         print('file does not exist: %s' % path)

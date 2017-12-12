@@ -1,15 +1,4 @@
 #!/usr/bin/env python
-"""
-Very simple HTTP server in python.
-Usage::
-    ./dummy-web-server.py [<port>]
-Send a GET request::
-    curl http://localhost
-Send a HEAD request::
-    curl -I http://localhost
-Send a POST request::
-    curl -d "foo=bar&bin=baz" http://localhost
-"""
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import urllib.parse
@@ -20,30 +9,37 @@ import io
 from http import HTTPStatus
 import shutil
 from code.node_loop import *
+from code.helper import *
 import yaml
 
 class ServerCustom(BaseHTTPRequestHandler):
     def do_GET(self):
+        logv('request path: %s' % self.path)
         config_file = '/etc/puppet-to-rundeck.yaml'
         if os.path.isfile(config_file):
             with open(config_file, 'r') as fconf:
                 yaml_conf = yaml.load(fconf)
                 yamlnodedir = yaml_conf['yamlnodedir']
                 outputdir = yaml_conf['outputdir']
+                max_age = yaml_conf['maxage']
         else:
             yamlnodedir = '/var/lib/puppet/yaml/node'
             outputdir = '/var/lib/puppet-to-rundeck/outdir'
+            max_age = 7
 
         os.chdir(outputdir + '/node')
 
         """Serve a GET request."""
         f = self.send_head()
         if f:
+            logv('f present OK')
             try:
-                node_loop(yamlnodedir,outputdir)
+                node_loop(yamlnodedir,outputdir,max_age,self.path)
                 self.copyfile(f, self.wfile)
             finally:
                 f.close()
+        else:
+            logv('f absent PROBLEM')
     
     def do_HEAD(self):
         """Serve a HEAD request."""
