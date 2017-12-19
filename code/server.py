@@ -17,15 +17,17 @@ class ServerCustom(BaseHTTPRequestHandler):
         yamlnodedir = '/var/lib/puppet/yaml/node'
         outputdir = '/var/lib/puppet-to-rundeck/outdir'
         max_age = 7
-        if yaml_conf['yamlnodedir']:
+        if 'yamlnodedir' in yaml_conf:
                yamlnodedir = yaml_conf['yamlnodedir']
-        if yaml_conf['outputdir']:
+        if 'outputdir' in yaml_conf:
                outputdir = yaml_conf['outputdir']
-        if yaml_conf['maxage']:
+        if 'maxage' in yaml_conf:
                max_age = yaml_conf['maxage']
 
 
         logv('request path: %s' % self.path)
+        if not os.path.isdir(outputdir):
+            os.mkdir(outputdir)
         os.chdir(outputdir)
 
         """Serve a GET request."""
@@ -204,6 +206,9 @@ def runServer():
         with open(config_file, 'r') as fconf:
             global yaml_conf
             yaml_conf = yaml.load(fconf)
+    else:
+        log('%s does not exist' % ( config_file ))
+        sys.exit(1)
    
     bind = '127.0.0.1'
     port = 8080
