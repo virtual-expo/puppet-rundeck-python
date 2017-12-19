@@ -18,8 +18,8 @@ def cut_line_1(fin,tmp_file):
     with open(tmp_file, 'w') as fout:
         fout.writelines(data[1:])
 
-def generate_yaml(path,filehandle,outputdir,node):
-    tmp_file = outputdir + '/tmp/tmpfile.yaml'
+def generate_yaml(path, filehandle, node):
+    tmp_file = '/tmp/tmpfile.yaml'
 
     logv("working on file: %s" % path)
 
