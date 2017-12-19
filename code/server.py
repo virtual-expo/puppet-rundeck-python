@@ -14,20 +14,19 @@ import yaml
 
 class ServerCustom(BaseHTTPRequestHandler):
     def do_GET(self):
-        logv('request path: %s' % self.path)
-        config_file = '/etc/puppet-to-rundeck.yaml'
-        if os.path.isfile(config_file):
-            with open(config_file, 'r') as fconf:
-                yaml_conf = yaml.load(fconf)
-                yamlnodedir = yaml_conf['yamlnodedir']
-                outputdir = yaml_conf['outputdir']
-                max_age = yaml_conf['maxage']
-        else:
-            yamlnodedir = '/var/lib/puppet/yaml/node'
-            outputdir = '/var/lib/puppet-to-rundeck/outdir'
-            max_age = 7
+        yamlnodedir = '/var/lib/puppet/yaml/node'
+        outputdir = '/var/lib/puppet-to-rundeck/outdir'
+        max_age = 7
+        if yaml_conf['yamlnodedir']:
+               yamlnodedir = yaml_conf['yamlnodedir']
+        if yaml_conf['outputdir']:
+               outputdir = yaml_conf['outputdir']
+        if yaml_conf['maxage']:
+               max_age = yaml_conf['maxage']
 
-        os.chdir(outputdir + '/node')
+
+        logv('request path: %s' % self.path)
+        os.chdir(outputdir)
 
         """Serve a GET request."""
         f = self.send_head()
@@ -198,8 +197,22 @@ class ServerCustom(BaseHTTPRequestHandler):
        
 #def runServer(server_class=HTTPServer, handler_class=S, port=8080):
 #    httpd = server_class(server_address, handler_class)
-def runServer(address,port):
-    server_address = (address, port)
+def runServer():
+    
+    config_file = '/etc/puppet-to-rundeck.yaml'
+    if os.path.isfile(config_file):
+        with open(config_file, 'r') as fconf:
+            global yaml_conf
+            yaml_conf = yaml.load(fconf)
+   
+    bind = '127.0.0.1'
+    port = 8080
+    if yaml_conf['bind']:
+        bind = yaml_conf['bind']
+    if yaml_conf['port']:
+        port = yaml_conf['port']
+
+    server_address = (yaml_conf['bind'], yaml_conf['port'])
 
     httpd = HTTPServer(server_address, ServerCustom)
     #httpd = HTTPServerCustom(server_address,ServerCustom,yamlnodedir,outputdir)

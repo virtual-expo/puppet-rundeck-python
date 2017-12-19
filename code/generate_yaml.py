@@ -18,7 +18,7 @@ def cut_line_1(fin,tmp_file):
     with open(tmp_file, 'w') as fout:
         fout.writelines(data[1:])
 
-def generate_yaml(path,outputdir,node):
+def generate_yaml(path,filehandle,outputdir,node):
     tmp_file = outputdir + '/tmp/tmpfile.yaml'
 
     logv("working on file: %s" % path)
@@ -35,5 +35,4 @@ def generate_yaml(path,outputdir,node):
         d = {yaml_data['parameters']['hostname']:{'hostname':yaml_data['name'], 'osFamily':yaml_data['parameters']['osfamily'], 'osVersion':yaml_data['parameters']['os']['release']['full'], 'osName':yaml_data['parameters']['os']['lsb']['distdescription'], 'osArch':yaml_data['parameters']['architecture'], 'tags':tags}}
         f.close()
 
-        with open(outputdir + '/node/' + node, 'w') as result_file:
-            yaml.dump(d, result_file, default_flow_style=False)
+        yaml.dump(d, filehandle, default_flow_style=False)
