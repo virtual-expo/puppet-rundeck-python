@@ -31,7 +31,7 @@ def generate_yaml(path, filehandle, node):
         f = open(tmp_file, 'r')
         yaml_data = yaml.load(f)
 
-        tags = yaml_data['parameters']['datacenter'] + ',' + yaml_data['parameters']['node_environment'] + ',' + yaml_data['parameters']['node_type'] + ',' + yaml_data['parameters']['os']['lsb']['distcodename']
+        tags = yaml_data['parameters']['datacenter'] + ',' + yaml_data['parameters']['node_environment'] + ',' + yaml_data['parameters']['node_type'] + ',' + yaml_data['parameters']['os']['lsb']['distcodename'] + ',' + yaml_data['parameters']['node_envid']
         d = {yaml_data['parameters']['hostname']:{'hostname':yaml_data['name'], 'osFamily':yaml_data['parameters']['osfamily'], 'osVersion':yaml_data['parameters']['os']['release']['full'], 'osName':yaml_data['parameters']['os']['lsb']['distdescription'], 'osArch':yaml_data['parameters']['architecture'], 'tags':tags}}
         f.close()
 
