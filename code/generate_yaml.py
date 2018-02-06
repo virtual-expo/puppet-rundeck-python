@@ -20,7 +20,7 @@ def cut_line_1(fin,tmp_file):
 
 def generate_yaml(path, filehandle, node):
     tmp_file = '/tmp/tmpfile.yaml'
-    tags_list = ['datacenter', 'node_environment', 'node_type', 'node_envid']
+    tags_list = ['datacenter', 'node_environment', 'node_type', 'node_envid', 'lsbdistcodename']
 
     logv("working on file: %s" % path)
 
@@ -31,7 +31,7 @@ def generate_yaml(path, filehandle, node):
         cut_line_1(path,tmp_file)
         f = open(tmp_file, 'r')
         yaml_data = yaml.load(f)
-        tags = yaml_data['parameters']['os']['lsb']['distcodename']
+        tags = []
 
         # check tags exist
         for tag_item in tags_list:
@@ -39,7 +39,7 @@ def generate_yaml(path, filehandle, node):
                 print('tag %s does not exist for file: %s' % tag_item, path)
                 sys.exit(1)
             else:
-                tags = tags + ',' + yaml_data['parameters'][tag_item]
+                tags.append(yaml_data['parameters'][tag_item])
 
         d = {yaml_data['parameters']['hostname']:{'hostname':yaml_data['name'], 'osFamily':yaml_data['parameters']['osfamily'], 'osVersion':yaml_data['parameters']['os']['release']['full'], 'osName':yaml_data['parameters']['os']['lsb']['distdescription'], 'osArch':yaml_data['parameters']['architecture'], 'tags':tags}}
         f.close()
