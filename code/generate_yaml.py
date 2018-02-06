@@ -36,8 +36,8 @@ def generate_yaml(path, filehandle, node):
         # check tags exist
         for tag_item in tags_list:
             if not tag_item in yaml_data['parameters']:
-                print('tag %s does not exist for file: %s' % tag_item, path)
-                sys.exit(1)
+                print('tag %s does not exist for file: %s' % (tag_item, path))
+                print('generating node with no tag')
             else:
                 tags.append(yaml_data['parameters'][tag_item])
 
