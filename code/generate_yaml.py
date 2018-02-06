@@ -31,6 +31,10 @@ def generate_yaml(path, filehandle, node):
         f = open(tmp_file, 'r')
         yaml_data = yaml.load(f)
 
+        if not 'datacenter' in yaml_data['parameters']:
+            print('tag datacenter does not existfor file: %s' % path)
+            sys.exit(1)
+
         tags = yaml_data['parameters']['datacenter'] + ',' + yaml_data['parameters']['node_environment'] + ',' + yaml_data['parameters']['node_type'] + ',' + yaml_data['parameters']['os']['lsb']['distcodename'] + ',' + yaml_data['parameters']['node_envid']
         d = {yaml_data['parameters']['hostname']:{'hostname':yaml_data['name'], 'osFamily':yaml_data['parameters']['osfamily'], 'osVersion':yaml_data['parameters']['os']['release']['full'], 'osName':yaml_data['parameters']['os']['lsb']['distdescription'], 'osArch':yaml_data['parameters']['architecture'], 'tags':tags}}
         f.close()
