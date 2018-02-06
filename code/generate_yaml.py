@@ -20,6 +20,7 @@ def cut_line_1(fin,tmp_file):
 
 def generate_yaml(path, filehandle, node):
     tmp_file = '/tmp/tmpfile.yaml'
+    tags_list = ['datacenter', 'node_environment', 'node_type', 'node_envid']
 
     logv("working on file: %s" % path)
 
@@ -30,12 +31,16 @@ def generate_yaml(path, filehandle, node):
         cut_line_1(path,tmp_file)
         f = open(tmp_file, 'r')
         yaml_data = yaml.load(f)
+        tags = yaml_data['parameters']['os']['lsb']['distcodename']
 
-        if not 'datacenter' in yaml_data['parameters']:
-            print('tag datacenter does not existfor file: %s' % path)
-            sys.exit(1)
+        # check tags exist
+        for tag_item in tags_list:
+            if not tag_item in yaml_data['parameters']:
+                print('tag %s does not exist for file: %s' % tag_item, path)
+                sys.exit(1)
+            else:
+                tags = tags + ',' + yaml_data['parameters'][tag_item]
 
-        tags = yaml_data['parameters']['datacenter'] + ',' + yaml_data['parameters']['node_environment'] + ',' + yaml_data['parameters']['node_type'] + ',' + yaml_data['parameters']['os']['lsb']['distcodename'] + ',' + yaml_data['parameters']['node_envid']
         d = {yaml_data['parameters']['hostname']:{'hostname':yaml_data['name'], 'osFamily':yaml_data['parameters']['osfamily'], 'osVersion':yaml_data['parameters']['os']['release']['full'], 'osName':yaml_data['parameters']['os']['lsb']['distdescription'], 'osArch':yaml_data['parameters']['architecture'], 'tags':tags}}
         f.close()
 
