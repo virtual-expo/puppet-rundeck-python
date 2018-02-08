@@ -50,23 +50,27 @@ def generate_yaml(path, filehandle, node):
             else:
                 attributes[attribute] = yaml_data['parameters'][attribute]
 
+        try:
 
+            d = {yaml_data['parameters']['hostname']:
+                   {'hostname':yaml_data['name'],
+                    'osFamily':yaml_data['parameters']['osfamily'],
+                    'osVersion':yaml_data['parameters']['os']['release']['full'],
+                    'osName':yaml_data['parameters']['os']['lsb']['distdescription'],
+                    'osArch':yaml_data['parameters']['architecture'],
+                    'tags': tags,
+                    'envid': attributes['node_envid'],
+                    'datacenter': attributes['datacenter'],
+                    'instanceid': attributes['node_instanceid'],
+                    'environment': attributes['node_environment'],
+                    'lsbdistcodename': attributes['lsb_distcodename'],
+                    'nodetype': attributes['node_type'],
+                   }
+                }
 
-        d = {yaml_data['parameters']['hostname']:
-               {'hostname':yaml_data['name'],
-                'osFamily':yaml_data['parameters']['osfamily'],
-                'osVersion':yaml_data['parameters']['os']['release']['full'],
-                'osName':yaml_data['parameters']['os']['lsb']['distdescription'],
-                'osArch':yaml_data['parameters']['architecture'],
-                'tags': tags,
-                'envid': attributes['node_envid'],
-                'datacenter': attributes['datacenter'],
-                'instanceid': attributes['node_instanceid'],
-                'environment': attributes['node_environment'],
-                'lsbdistcodename': attributes['lsb_distcodename'],
-                'nodetype': attributes['node_type'],
-               }
-            }
+                yaml.dump(d, filehandle, default_flow_style=False)
+        except TypeError:
+            print('ERROR: TypeError caught, skipping node %s.' % node)
+
         f.close()
 
-        yaml.dump(d, filehandle, default_flow_style=False)
