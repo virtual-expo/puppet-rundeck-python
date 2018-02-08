@@ -21,6 +21,7 @@ def cut_line_1(fin,tmp_file):
 def generate_yaml(path, filehandle, node):
     tmp_file = '/tmp/tmpfile.yaml'
     tags_list = ['datacenter', 'node_environment', 'node_type', 'node_envid', 'lsbdistcodename']
+    attributes_list = ['node_envid', 'datacenter', 'node_instanceid', 'node_environment', 'lsb_distcodename', 'node_type']
 
     logv("working on file: %s" % path)
 
@@ -37,13 +38,33 @@ def generate_yaml(path, filehandle, node):
         for tag_item in tags_list:
             if not tag_item in yaml_data['parameters']:
                 print('WARN: tag %s does not exist for file: %s' % (tag_item, path))
-                print('WARN:skipping node')
-                return 1
             else:
                 tags.append(yaml_data['parameters'][tag_item])
 
+        for attribute in attributes_list:
+            if not attribute in yaml_data['parameters']:
+                print('WARN: attribute %s does not exist for file: %s' % (attribute, path))
+                attributes[attribute] = "__unknown__"
+            else:
+                attributes[attribute] = yaml_data[attribute]
 
-        d = {yaml_data['parameters']['hostname']:{'hostname':yaml_data['name'], 'osFamily':yaml_data['parameters']['osfamily'], 'osVersion':yaml_data['parameters']['os']['release']['full'], 'osName':yaml_data['parameters']['os']['lsb']['distdescription'], 'osArch':yaml_data['parameters']['architecture'], 'tags':tags}}
+
+
+        d = {yaml_data['parameters']['hostname']:
+               {'hostname':yaml_data['name'],
+                'osFamily':yaml_data['parameters']['osfamily'],
+                'osVersion':yaml_data['parameters']['os']['release']['full'],
+                'osName':yaml_data['parameters']['os']['lsb']['distdescription'],
+                'osArch':yaml_data['parameters']['architecture'],
+                'tags': tags,
+                'envid': attributes['node_envid'],
+                'datacenter': attributes['datacenter'],
+                'instanceid': attributes['node_instanceid'],
+                'environment': attributes['node_environment'],
+                'lsbdistcodename': attributes['lsb_distcodename'],
+                'nodetype': attributes['node_type'],
+               }
+            }
         f.close()
 
         yaml.dump(d, filehandle, default_flow_style=False)
