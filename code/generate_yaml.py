@@ -37,7 +37,7 @@ def generate_yaml(path, filehandle, node):
         # check tags exist
         for tag_item in tags_list:
             if not tag_item in yaml_data['parameters']:
-                print('WARN: tag %s does not exist for file: %s' % (tag_item, path))
+                print('WARN: tag %s does not exist for node: %s' % (tag_item, node))
             else:
                 tags.append(yaml_data['parameters'][tag_item])
 
@@ -45,7 +45,7 @@ def generate_yaml(path, filehandle, node):
 
         for attribute in attributes_list:
             if not attribute in yaml_data['parameters']:
-                print('WARN: attribute %s does not exist for file: %s' % (attribute, path))
+                print('WARN: attribute %s does not exist for node: %s' % (attribute, node))
                 attributes[attribute] = "__unknown__"
             else:
                 attributes[attribute] = yaml_data['parameters'][attribute]
