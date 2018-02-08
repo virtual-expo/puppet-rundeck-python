@@ -20,7 +20,7 @@ def cut_line_1(fin,tmp_file):
 
 def generate_yaml(path, filehandle, node):
     tmp_file = '/tmp/tmpfile.yaml'
-    tags_list = ['datacenter', 'node_environment', 'node_type', 'node_envid', 'lsbdistcodename']
+    tags_list = ['datacenter', 'node_environment', 'node_type', 'node_envid', 'lsb_distcodename']
     attributes_list = ['node_envid', 'datacenter', 'node_instanceid', 'node_environment', 'lsb_distcodename', 'node_type']
 
     logv("working on file: %s" % path)
