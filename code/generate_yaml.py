@@ -51,7 +51,6 @@ def generate_yaml(path, filehandle, node):
                 attributes[attribute] = yaml_data['parameters'][attribute]
 
         try:
-
             d = {yaml_data['parameters']['hostname']:
                    {'hostname':yaml_data['name'],
                     'osFamily':yaml_data['parameters']['osfamily'],
@@ -68,7 +67,7 @@ def generate_yaml(path, filehandle, node):
                    }
                 }
 
-                yaml.dump(d, filehandle, default_flow_style=False)
+            yaml.dump(d, filehandle, default_flow_style=False)
         except TypeError:
             print('ERROR: TypeError caught, skipping node %s.' % node)
 
