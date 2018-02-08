@@ -46,7 +46,7 @@ def generate_yaml(path, filehandle, node):
                 print('WARN: attribute %s does not exist for file: %s' % (attribute, path))
                 attributes[attribute] = "__unknown__"
             else:
-                attributes[attribute] = yaml_data[attribute]
+                attributes[attribute] = yaml_data['parameters'][attribute]
 
 
 
