@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import glob
 from code.helper import *
 from code.generate_yaml import *
+from code.add_nodes import *
 import tempfile
 
 def generate_node(filehandle,outputfile,max_age,path_to_node):
@@ -33,6 +34,10 @@ def node_loop(yaml_node_dir, outfile, max_age):
         generate_node(filehandle, outfile, max_age, path_to_node)
 
     logv('end of the loop')
+
+    logv('adding special nodes')
+    add_nodes(filehandle)
+    logv('special nodes added')
 
     # remove the real outfile and create a new hardlink
     os.remove(outfile)
