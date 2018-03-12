@@ -15,14 +15,14 @@ def add_nodes(filehandle):
     
     
     d = {'velo4nas11':
-            {'hostname': 'velo4nas11'
+            {'hostname': 'velo4nas11',
              'tags': ['nas'],
              'datacenter': 'lo',
              'nodetype': 'nas',
             }
          
          'velo4nas12':
-            {'hostname': 'velo4nas12'
+            {'hostname': 'velo4nas12',
              'tags': ['nas'],
              'datacenter': 'lo',
              'nodetype': 'nas',
