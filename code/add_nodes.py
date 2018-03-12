@@ -19,7 +19,7 @@ def add_nodes(filehandle):
              'tags': ['nas'],
              'datacenter': 'lo',
              'nodetype': 'nas',
-            }
+            },
          
          'velo4nas12':
             {'hostname': 'velo4nas12',
