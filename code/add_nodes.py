@@ -19,6 +19,8 @@ def add_nodes(filehandle):
              'tags': ['nas'],
              'datacenter': 'lo',
              'nodetype': 'nas',
+             'username': 'admin',
+             'ssh-keypath': '/var/lib/rundeck/.ssh/id_rsa.velo4nas'
             },
          
          'velo4nas12':
@@ -26,6 +28,8 @@ def add_nodes(filehandle):
              'tags': ['nas'],
              'datacenter': 'lo',
              'nodetype': 'nas',
+             'username': 'admin',
+             'ssh-keypath': '/var/lib/rundeck/.ssh/id_rsa.velo4nas'
             }
         }
 
