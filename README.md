@@ -19,6 +19,7 @@ This script should run on the Puppet Master and have read access to puppet direc
 ### Options
 
 Name | Description | Default
+--- | --- | ---
 `-o, --outfile` | Required: output yaml file |
 `-i, --inputdir` | Required: in put directory containg puppet nodes yaml files | `/var/lib/puppet/yaml/node`
 `-m, --maxage` | Required: max age of input node files (days) | 7
