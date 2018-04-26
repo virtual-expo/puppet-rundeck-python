@@ -2,7 +2,9 @@
 
 Feed Rundeck with Puppet nodes.
 
-This project produces a yaml file which you can expose on an internal address. Using a URL Source in Project Nodes configuration, Rundeck then fetches up-to-date Puppet Nodes.
+This Python script reads into the Puppet Master filesystem and produces a yaml file containing up-to-date nodes information. The nodes definition can be customized to add or remove as many facts as wanted, which can then be queried by Rundeck Node Filter.
+
+The final yaml file should be exposed to an internal address, used as a URL Source in Rundeck Project Nodes configuration.
 
 
 ## Requirement
@@ -20,6 +22,6 @@ This script should run on the Puppet Master and have read access to puppet direc
 
 Name | Description | Default
 --- | --- | ---
-`-o, --outfile` | Required: output yaml file |
-`-i, --inputdir` | Required: in put directory containg puppet nodes yaml files | `/var/lib/puppet/yaml/node`
-`-m, --maxage` | Required: max age of input node files (days) | 7
+`-o, --outfile` | **Required:** output yaml file |
+`-i, --inputdir` | **Required:** input directory containg puppet nodes yaml files | `/var/lib/puppet/yaml/node`
+`-m, --maxage` | **Required:** max age of input node files (days) | 7
