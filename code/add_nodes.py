@@ -14,23 +14,7 @@ from code.helper import *
 def add_nodes(filehandle):
     
     
-    d = {'velo4nas11':
-            {'hostname': 'velo4nas11.virtual-expo.com',
-             'tags': ['nas'],
-             'datacenter': 'lo',
-             'nodetype': 'nas',
-             'username': 'admin',
-             'ssh-keypath': '/var/lib/rundeck/.ssh/id_rsa.velo4nas'
-            },
-         
-         'velo4nas12':
-            {'hostname': 'velo4nas12.virtual-expo.com',
-             'tags': ['nas'],
-             'datacenter': 'lo',
-             'nodetype': 'nas',
-             'username': 'admin',
-             'ssh-keypath': '/var/lib/rundeck/.ssh/id_rsa.velo4nas'
-            }
-        }
+    f = open('conf/other_nodes.yaml', 'r')
+    d = yaml.load(f)
 
     yaml.dump(d, filehandle, default_flow_style=False)
