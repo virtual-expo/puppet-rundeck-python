@@ -30,9 +30,7 @@ def node_loop(yaml_node_dir, outfile, max_age):
     filehandle = tempfile.NamedTemporaryFile(mode='w', prefix='puppet-to-rundeck', dir=os.path.dirname(outfile))
     os.chmod(filehandle.name, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 
-    logv('adding special nodes')
     add_nodes(filehandle)
-    logv('special nodes added')
     
     for path_to_node in listing:
         generate_node(filehandle, outfile, max_age, path_to_node)

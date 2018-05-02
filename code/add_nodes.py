@@ -12,9 +12,13 @@ from code.helper import *
 
 
 def add_nodes(filehandle):
-    
-    
-    f = open('conf/other_nodes.yaml', 'r')
-    d = yaml.load(f)
+    conf_file = 'conf/other_nodes.yaml'
 
-    yaml.dump(d, filehandle, default_flow_style=False)
+    if not os.path.isfile(conf_file):
+        log("no addtional nodes declared")
+    else:
+        log("adding nodes from file: %s" % conf_file)
+        f = open(conf_file, 'r')
+        d = yaml.load(f)
+
+        yaml.dump(d, filehandle, default_flow_style=False)
