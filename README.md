@@ -2,7 +2,7 @@
 
 Feed Rundeck with Puppet nodes.
 
-This Python script reads into the Puppet Master filesystem and produces a yaml file containing up-to-date nodes information. The nodes definition can be customized to add or remove as many facts as wanted, which can then be queried by Rundeck Node Filter.
+This Python script reads into the Puppet Master filesystem and produces a yaml file containing up-to-date nodes information. The nodes description is based on Puppet facts and read from the yaml node reports written by puppet. The [output yaml](http://rundeck.org/docs/man5/resource-yaml.html) file can be customized to add or remove as many facts as wanted, which can then be queried by Rundeck Node Filter.
 
 The final yaml file should be exposed to an internal address, used as a URL Source in Rundeck Project Nodes configuration.
 
@@ -10,9 +10,8 @@ The final yaml file should be exposed to an internal address, used as a URL Sour
 ## Requirement
 * Python 3
 
-## Usage
 
-### Configuration
+## Configuration
 
 The file `conf/conf.yaml` should be filled with several sections:
 
@@ -26,8 +25,10 @@ yamlstruct:
     key2: value2
     key3: value3
 ```
-    
+where `node_name` is the title of your yaml block and `keyN` is an optionnal entry.
+* `tags_list`: is a list of tags, which are used in Rundeck for node filtering. The tag list is a subset of {key1, key2,...,keyN}.
 
+## Usage
 This script should run on the Puppet Master and have read access to puppet directories.
 
 ```
@@ -41,3 +42,5 @@ Name | Description | Default
 `-o, --outfile` | **Required:** output yaml file |
 `-i, --inputdir` | **Required:** input directory containg puppet nodes yaml files | `/var/lib/puppet/yaml/node`
 `-m, --maxage` | **Required:** max age of input node files (days) | 7
+
+### Example
