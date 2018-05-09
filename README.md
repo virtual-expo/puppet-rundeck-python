@@ -8,9 +8,25 @@ The final yaml file should be exposed to an internal address, used as a URL Sour
 
 
 ## Requirement
-* Python 2.7 (tested). Other versions should work.
+* Python 3
 
 ## Usage
+
+### Configuration
+
+The file `conf/conf.yaml` should be filled with several sections:
+
+* `tmp_file`: the temporary file where the script will write before replacing the output file with its new version
+* `yamlstruct`: the yaml block describing each node. It should be formatted in this way:
+```yaml
+yamlstruct:
+  node_name: name
+  keys:
+    key1: value1
+    key2: value2
+    key3: value3
+```
+    
 
 This script should run on the Puppet Master and have read access to puppet directories.
 

@@ -1,0 +1,23 @@
+---
+tmp_file: /tmp/tmpfile.yaml
+tags_list:
+  - datacenter
+  - environment
+  - nodetype
+  - envid
+  - lsbdistcodename
+
+yamlstruct:
+  node_name: parameters.hostname
+  keys:
+    hostname: name
+    osFamily: parameters.osfamily
+    osVersion: parameters.os.release.full
+    osName: parameters.os.lsb.distdescription
+    osArch: parameters.architecture
+    envid: parameters.node_envid
+    datacenter: parameters.datacenter
+    instanceid: parameters.node_instanceid
+    environment: parameters.node_environment
+    lsbdistcodename: parameters.lsbdistcodename
+    nodetype: parameters.node_type
