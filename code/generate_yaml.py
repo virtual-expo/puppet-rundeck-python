@@ -18,10 +18,22 @@ def cut_line_1(fin,tmp_file):
     with open(tmp_file, 'w') as fout:
         fout.writelines(data[1:])
 
+def lookup_yaml(yaml_data,keys,node):
+    value = yaml_data
+    for key in keys.split('.'):
+        #if not key in value:
+        #    print('WARN: key %s does not exist for node: %s' % (key, node))
+        #    value = "__unknown__"
+        #else:
+        value = value[key]
+    return value
+
 def generate_yaml(path, filehandle, node):
-    tmp_file = '/tmp/tmpfile.yaml'
-    tags_list = ['datacenter', 'node_environment', 'node_type', 'node_envid', 'lsbdistcodename']
-    attributes_list = ['node_envid', 'datacenter', 'node_instanceid', 'node_environment', 'lsbdistcodename', 'node_type']
+    with open('conf/conf.yaml', 'r') as ymlconf:
+        cfg = yaml.load(ymlconf)
+
+    tmp_file = cfg['tmp_file']
+    tags_list = cfg['tags_list']
 
     logv("working on file: %s" % path)
 
@@ -41,35 +53,18 @@ def generate_yaml(path, filehandle, node):
             else:
                 tags.append(yaml_data['parameters'][tag_item])
 
-        attributes = { }
+        #try:
+            sub_dict = {}
+            for key in cfg['yamlstruct']['keys']:
+                logv("key: %s = %s" % (key,lookup_yaml(yaml_data,cfg['yamlstruct']['keys'][key],node)))
+                sub_dict[key] = lookup_yaml(yaml_data,cfg['yamlstruct']['keys'][key],node)
+                print(sub_dict)
 
-        for attribute in attributes_list:
-            if not attribute in yaml_data['parameters']:
-                print('WARN: attribute %s does not exist for node: %s' % (attribute, node))
-                attributes[attribute] = "__unknown__"
-            else:
-                attributes[attribute] = yaml_data['parameters'][attribute]
-
-        try:
-            d = {yaml_data['parameters']['hostname']:
-                   {'hostname':yaml_data['name'],
-                    'osFamily':yaml_data['parameters']['osfamily'],
-                    'osVersion':yaml_data['parameters']['os']['release']['full'],
-                    'osName':yaml_data['parameters']['os']['lsb']['distdescription'],
-                    'osArch':yaml_data['parameters']['architecture'],
-                    'tags': tags,
-                    'envid': attributes['node_envid'],
-                    'datacenter': attributes['datacenter'],
-                    'instanceid': attributes['node_instanceid'],
-                    'environment': attributes['node_environment'],
-                    'lsbdistcodename': attributes['lsbdistcodename'],
-                    'nodetype': attributes['node_type'],
-                   }
-                }
-
-            yaml.dump(d, filehandle, default_flow_style=False)
-        except TypeError:
-            print('ERROR: TypeError caught, skipping node %s.' % node)
+            #d = {lookup_yaml(yaml_data,cfg['yamlstruct']['node_name'],node):sub_dict}
+            
+            #yaml.dump(d, filehandle, default_flow_style=False)
+        #except TypeError:
+        #    print('ERROR: TypeError caught, skipping node %s.' % node)
 
         f.close()
 
