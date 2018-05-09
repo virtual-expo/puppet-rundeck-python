@@ -21,11 +21,17 @@ def cut_line_1(fin,tmp_file):
 def lookup_yaml(yaml_data,keys,node):
     value = yaml_data
     for key in keys.split('.'):
-        #if not key in value:
-        #    print('WARN: key %s does not exist for node: %s' % (key, node))
-        #    value = "__unknown__"
-        #else:
-        value = value[key]
+        logv("looking for key %s" % key)
+        if isinstance(value, dict):
+            if not key in value:
+                log('key %s does not exist for node: %s' % (key, node))
+                value = "__unknown__"
+            else:
+                value = value[key]
+        else:
+            log('key %s cannot be read for node %s' % (key,node))
+            value = "__unknown__"
+            break
     return value
 
 def generate_yaml(path, filehandle, node):
@@ -56,9 +62,8 @@ def generate_yaml(path, filehandle, node):
         #try:
             sub_dict = {}
             for key in cfg['yamlstruct']['keys']:
-                logv("key: %s = %s" % (key,lookup_yaml(yaml_data,cfg['yamlstruct']['keys'][key],node)))
                 sub_dict[key] = lookup_yaml(yaml_data,cfg['yamlstruct']['keys'][key],node)
-                print(sub_dict)
+                #print(sub_dict)
 
             #d = {lookup_yaml(yaml_data,cfg['yamlstruct']['node_name'],node):sub_dict}
             
