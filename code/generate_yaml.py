@@ -21,15 +21,14 @@ def cut_line_1(fin,tmp_file):
 def lookup_yaml(yaml_data,keys,node):
     value = yaml_data
     for key in keys.split('.'):
-        logv("looking for key %s" % key)
         if isinstance(value, dict):
             if not key in value:
-                log('key %s does not exist for node: %s' % (key, node))
+                logv('key %s does not exist for node: %s' % (key, node))
                 value = "__unknown__"
             else:
                 value = value[key]
         else:
-            log('key %s cannot be read for node %s' % (key,node))
+            logv('key %s cannot be read for node %s' % (key,node))
             value = "__unknown__"
             break
     return value
@@ -40,8 +39,7 @@ def generate_yaml(path, filehandle, node):
 
     tmp_file = cfg['tmp_file']
     tags_list = cfg['tags_list']
-
-    logv("working on file: %s" % path)
+    keys_dict = cfg['yamlstruct']['keys']
 
     if not os.path.isfile(path):
         print('file does not exist: %s' % path)
@@ -52,18 +50,17 @@ def generate_yaml(path, filehandle, node):
         yaml_data = yaml.load(f)
         tags = []
 
-        # check tags exist
-        for tag_item in tags_list:
-            if not tag_item in yaml_data['parameters']:
-                print('WARN: tag %s does not exist for node: %s' % (tag_item, node))
-            else:
-                tags.append(yaml_data['parameters'][tag_item])
-
         try:
             sub_dict = {}
-            for key in cfg['yamlstruct']['keys']:
-                sub_dict[key] = lookup_yaml(yaml_data,cfg['yamlstruct']['keys'][key],node)
-                #print(sub_dict)
+            for key in keys_dict:
+                sub_dict[key] = lookup_yaml(yaml_data,keys_dict[key],node)
+
+            sub_dict['tags'] = []
+            for tag in tags_list:
+                if tag in keys_dict:
+                    sub_dict['tags'].append(sub_dict[tag])
+                else:
+                    logv('tag %s is not part of your keys' % tag)
 
             d = {lookup_yaml(yaml_data,cfg['yamlstruct']['node_name'],node):sub_dict}
             
@@ -72,4 +69,3 @@ def generate_yaml(path, filehandle, node):
             log('ERROR: TypeError caught, skipping node %s.' % node)
 
         f.close()
-

@@ -35,7 +35,6 @@ def node_loop(yaml_node_dir, outfile, max_age):
     for path_to_node in listing:
         generate_node(filehandle, outfile, max_age, path_to_node)
 
-    logv('end of the loop')
 
     # remove the real outfile and create a new hardlink
     os.remove(outfile)
