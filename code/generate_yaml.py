@@ -59,17 +59,17 @@ def generate_yaml(path, filehandle, node):
             else:
                 tags.append(yaml_data['parameters'][tag_item])
 
-        #try:
+        try:
             sub_dict = {}
             for key in cfg['yamlstruct']['keys']:
                 sub_dict[key] = lookup_yaml(yaml_data,cfg['yamlstruct']['keys'][key],node)
                 #print(sub_dict)
 
-            #d = {lookup_yaml(yaml_data,cfg['yamlstruct']['node_name'],node):sub_dict}
+            d = {lookup_yaml(yaml_data,cfg['yamlstruct']['node_name'],node):sub_dict}
             
-            #yaml.dump(d, filehandle, default_flow_style=False)
-        #except TypeError:
-        #    print('ERROR: TypeError caught, skipping node %s.' % node)
+            yaml.dump(d, filehandle, default_flow_style=False)
+        except TypeError:
+            log('ERROR: TypeError caught, skipping node %s.' % node)
 
         f.close()
 
