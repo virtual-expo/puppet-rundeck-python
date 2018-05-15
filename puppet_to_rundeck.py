@@ -2,7 +2,7 @@
 #coding: utf8
 #  vim: set sw=4
 
-import argparse
+import argparse, os, sys
 from code.helper import *
 from code.node_loop import node_loop
 
@@ -17,8 +17,11 @@ def main():
     args = parser.parse_args()
     logv_set(args.verbose)
     
-
-    node_loop(args.inputdir, args.outfile, args.maxage)
+    if not os.path.isdir(args.inputdir):
+        print('directory does not exist: %s' % args.inputdir)
+        sys.exit(1)
+    else:
+        node_loop(args.inputdir, args.outfile, args.maxage)
 
 if __name__ == "__main__":
     main()

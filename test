@@ -1,0 +1,16 @@
+velo4nas11:
+  datacenter: lo
+  hostname: velo4nas11.virtual-expo.com
+  nodetype: nas
+  ssh-keypath: /var/lib/rundeck/.ssh/id_rsa.velo4nas
+  tags:
+  - nas
+  username: admin
+velo4nas12:
+  datacenter: lo
+  hostname: velo4nas12.virtual-expo.com
+  nodetype: nas
+  ssh-keypath: /var/lib/rundeck/.ssh/id_rsa.velo4nas
+  tags:
+  - nas
+  username: admin
