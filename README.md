@@ -23,8 +23,8 @@ cp conf/conf_example.yaml conf/conf.yaml
 Name | Description | Default
 --- | --- | ---
 `-o, --outfile` | **Required:** output yaml file |
-`-i, --inputdir` | **Required:** input directory containg puppet nodes yaml files | `/var/lib/puppet/yaml/node`
-`-m, --maxage` | **Required:** max age of input node files (days) | 7
+`-i, --inputdir` | input directory containg puppet nodes yaml files | `/var/lib/puppet/yaml/node`
+`-m, --maxage` | max age of input node files (days) | 7
 
 
 ### Configuration
