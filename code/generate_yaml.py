@@ -34,15 +34,20 @@ def lookup_yaml(yaml_data,keys,node):
     return value
 
 def generate_yaml(path, filehandle, node):
-    with open('conf/conf.yaml', 'r') as ymlconf:
-        cfg = yaml.load(ymlconf)
+    conf_file = 'conf/conf.yaml'
+    if not os.path.isfile(conf_file):
+        print('ERROR: conf file does not exist: %s' % conf_file)
+        sys.exit(1)
+    else:
+        with open(conf_file, 'r') as ymlconf:
+            cfg = yaml.load(ymlconf)
 
     tmp_file = cfg['tmp_file']
     tags_list = cfg['tags_list']
     keys_dict = cfg['yamlstruct']['keys']
 
     if not os.path.isfile(path):
-        print('file does not exist: %s' % path)
+        print('ERROR: file does not exist: %s' % path)
         sys.exit(1)
     else:
         cut_line_1(path,tmp_file)

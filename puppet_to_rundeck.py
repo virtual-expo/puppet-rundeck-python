@@ -18,7 +18,7 @@ def main():
     logv_set(args.verbose)
     
     if not os.path.isdir(args.inputdir):
-        print('directory does not exist: %s' % args.inputdir)
+        print('ERROR: directory does not exist: %s' % args.inputdir)
         sys.exit(1)
     else:
         node_loop(args.inputdir, args.outfile, args.maxage)
