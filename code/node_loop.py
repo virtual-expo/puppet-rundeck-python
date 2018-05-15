@@ -13,7 +13,7 @@ from code.generate_yaml import *
 from code.add_nodes import *
 import tempfile
 
-def generate_node(filehandle,outputfile,max_age,path_to_node):
+def generate_node(filehandle,max_age,path_to_node):
     if (datetime.now() - datetime.fromtimestamp(os.path.getmtime(path_to_node))) > timedelta(days = max_age):
         log("file %s is too old" % path_to_node)
     else:
@@ -33,11 +33,13 @@ def node_loop(yaml_node_dir, outfile, max_age):
     add_nodes(filehandle)
     
     for path_to_node in listing:
-        generate_node(filehandle, outfile, max_age, path_to_node)
+        generate_node(filehandle, max_age, path_to_node)
 
 
     # remove the real outfile and create a new hardlink
-    os.remove(outfile)
+    if os.path.isfile(outfile):
+        os.remove(outfile)
+
     os.link(filehandle.name, outfile)
 
     # python automagically removes the tempfile
