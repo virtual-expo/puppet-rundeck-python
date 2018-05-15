@@ -2,7 +2,5 @@ addnode1:
   hostname: additional1
   tags:
     - additional
-  datacenter: DC
-  nodetype: not_managed_by_puppet
   username: admin
   ssh-keypath: /home/admin/.ssh/id_rsa

@@ -45,10 +45,12 @@ where `yournodename` is the title of your yaml block. The `node_name` entry is m
 `keyN` is an optionnal entry, like a fact you want to access via Rundeck Node Filter.
 * `tags_list`: is a list of tags, which are used in Rundeck for node filtering. The tag list is a subset of {key1, key2,...,keyN}.
 
+If you need to add a few nodes **not** managed by Puppet, you can describe them in the file `conf/other_nodes.yaml`, following the example file `conf/other_nodes_example.yaml`.
+
 
 ### Example
 
-Assuming your `conf/conf.yaml` is the following:
+Assuming your configuration file `conf/conf.yaml` is the following:
 ```yaml
 ---
 tmp_file: /tmp/tmpfile.yaml
@@ -95,6 +97,7 @@ example_node:
   osArch: amd64
   lsbdistcodename: stretch
   customfact: mycustomvalue
+  tags: stretch, mycustomvalue
 ```
 
 Each of the fields of the output block can be queried by Rundeck Node Filter.
