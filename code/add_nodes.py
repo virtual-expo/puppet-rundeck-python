@@ -12,7 +12,7 @@ from code.helper import *
 
 
 def add_nodes(filehandle):
-    conf_file = 'conf/other_nodes.yaml'
+    conf_file = os.path.dirname(os.path.realpath(__file__)) + '/../conf/other_nodes.yaml'
 
     if not os.path.isfile(conf_file):
         log("no addtional nodes declared")

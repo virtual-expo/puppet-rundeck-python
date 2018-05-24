@@ -34,7 +34,7 @@ def lookup_yaml(yaml_data,keys,node):
     return value
 
 def generate_yaml(path, filehandle, node):
-    conf_file = 'conf/conf.yaml'
+    conf_file = os.path.dirname(os.path.realpath(__file__)) + '/../conf/conf.yaml'
     if not os.path.isfile(conf_file):
         print('ERROR: conf file does not exist: %s' % conf_file)
         sys.exit(1)
